@@ -1,14 +1,15 @@
-import { ValidationError } from "express-validator";
-import { CustomError } from "./custom-errors";
+import { CustomError } from "../errors";
 
 export class NotAuthorizedError extends CustomError {
   statusCode = 401;
+
   constructor() {
     super("Not Authorized");
 
     Object.setPrototypeOf(this, NotAuthorizedError.prototype);
   }
+
   serializeErrors() {
-    return [{ message: "Not Authorized" }];
+    return [{ message: "Not authorized" }];
   }
 }
