@@ -34,7 +34,7 @@ router.post(
       const user = await User.build({ email, password: passwordHashed });
       await user.save();
 
-      const token = jwt.sign({ email }, `${process.env.PRIVATE_KEY_JWT}`, {
+      const token = jwt.sign({ email }, `${process.env.JWT_KEY}`, {
         expiresIn: "15m",
       });
 
