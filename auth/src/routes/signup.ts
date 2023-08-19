@@ -1,10 +1,9 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
-import { RequestValidationError } from "../errors/request-validation-errors";
-import { BadRequestError } from "../errors/user-existed";
-import { User } from "../models/user";
-import * as bcrypt from "bcrypt";
-import { Password } from "../services/password";
+import { BadRequestError, RequestValidationError } from "../errors";
+import { User } from "../models";
+import { Password } from "../services";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -17,7 +16,7 @@ router.post(
       .isLength({ min: 4, max: 20 })
       .withMessage("Password must be between 4 and 20 characters"),
   ],
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       const errors = validationResult(req);
 
@@ -35,9 +34,17 @@ router.post(
       const user = await User.build({ email, password: passwordHashed });
       await user.save();
 
+      const token = jwt.sign({ email }, `${process.env.PRIVATE_KEY_JWT}`, {
+        expiresIn: "15m",
+      });
+
+      req.session = {
+        jwt: token,
+      };
+
       res.status(201).send(user);
     } catch (err) {
-      console.log("ERROR :", err);
+      next(err);
     }
   }
 );
