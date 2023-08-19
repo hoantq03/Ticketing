@@ -1,5 +1,6 @@
 import { json } from "body-parser";
 import express from "express";
+import mongoose from "mongoose";
 
 import { errorHandler } from "./middlewares/error-handler";
 import { currentUserRouter } from "./routes/current-user";
@@ -17,6 +18,17 @@ app.use(signupRouter);
 
 app.use(errorHandler);
 
-app.listen(3000, () => {
-  console.log("Listening on port 3000!!!!!!!!");
-});
+const start = async () => {
+  try {
+    await mongoose.connect("mongodb://auth-mongo-srv:27017/auth");
+    console.log("connect to mongodb");
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+  app.listen(3000, () => {
+    console.log("Listening on port 3000!!!!!!!!");
+  });
+};
+
+start();
