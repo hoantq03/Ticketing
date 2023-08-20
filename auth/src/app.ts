@@ -1,16 +1,15 @@
+import { json } from "body-parser";
+import cookieSession from "cookie-session";
 import express from "express";
 import "express-async-errors";
-import { json } from "body-parser";
-import mongoose from "mongoose";
-import cookieSession from "cookie-session";
+import { NotFoundError } from "./errors";
+import { errorHandler } from "./middlewares";
 import {
   currentUserRouter,
   signinRouter,
   signoutRouter,
   signupRouter,
 } from "./routes";
-import { NotFoundError } from "./errors";
-import { errorHandler } from "./middlewares";
 
 const app = express();
 app.set("trust proxy", true);
