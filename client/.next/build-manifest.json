@@ -27,10 +27,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/banana": [
+    "/test-route": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/banana.js"
+      "static/chunks/pages/test-route.js"
     ]
   },
   "ampFirstPages": []
