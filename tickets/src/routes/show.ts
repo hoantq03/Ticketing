@@ -11,6 +11,7 @@ router.get("/api/tickets", async (req: Request, res: Response) => {
 
 router.get("/api/tickets/:ticketId", async (req: Request, res: Response) => {
   const ticketId = req.params.ticketId;
+
   const ticket = await Ticket.findById(ticketId);
   if (!ticket) {
     throw new NotFoundError();
