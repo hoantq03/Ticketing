@@ -1,8 +1,7 @@
 import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import jwt from "jsonwebtoken";
-import { validateRequest } from "../middlewares";
-import { BadRequestError } from "../errors";
+import { BadRequestError, validateRequest } from "@eztik/common";
 import { User } from "../models";
 
 const router = express.Router();

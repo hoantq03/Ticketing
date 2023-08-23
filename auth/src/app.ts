@@ -2,8 +2,7 @@ import { json } from "body-parser";
 import cookieSession from "cookie-session";
 import express from "express";
 import "express-async-errors";
-import { NotFoundError } from "./errors";
-import { errorHandler } from "./middlewares";
+import { errorHandler, NotFoundError } from "@eztik/common";
 import {
   currentUserRouter,
   signinRouter,
