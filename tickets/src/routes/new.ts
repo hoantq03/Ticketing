@@ -2,6 +2,8 @@ import { requireAuth, validateRequest } from "@eztik/common";
 import express, { Response, Request } from "express";
 import { body } from "express-validator";
 import { Ticket } from "../models/ticket";
+import { TicketCreatedPublisher } from "../events/publisher/ticket-created-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -25,6 +27,12 @@ router.post(
     });
     await ticket.save();
 
+    await new TicketCreatedPublisher(natsWrapper.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: req.currentUser!.id,
+    });
     res.status(201).send(ticket);
   }
 );
