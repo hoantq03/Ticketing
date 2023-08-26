@@ -3,10 +3,10 @@ import cookieSession from "cookie-session";
 import express from "express";
 import "express-async-errors";
 import { currentUser, errorHandler, NotFoundError } from "@eztik/common";
-import { createTicketRouter } from "./routes/create-tickets";
-import { showTicketRouter } from "./routes/get-tickets";
-import { IndexTicketRouter } from "./routes";
-import { UpdateTicketRouter } from "./routes/update-tickets";
+import { cancelOrderRouter } from "./routes/cancel-order";
+import { createOrderRouter } from "./routes/create-orders";
+import { indexOrderRouter } from "./routes/index";
+import { orderDetailRouter } from "./routes/orders-detail";
 
 const app = express();
 app.set("trust proxy", true);
@@ -19,13 +19,10 @@ app.use(
 );
 app.use(currentUser);
 
-app.use(createTicketRouter);
-
-app.use(showTicketRouter);
-
-app.use(IndexTicketRouter);
-
-app.use(UpdateTicketRouter);
+app.use(cancelOrderRouter);
+app.use(createOrderRouter);
+app.use(indexOrderRouter);
+app.use(orderDetailRouter);
 
 app.all("*", async (req, res) => {
   throw new NotFoundError();
