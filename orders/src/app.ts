@@ -3,10 +3,10 @@ import cookieSession from "cookie-session";
 import express from "express";
 import "express-async-errors";
 import { currentUser, errorHandler, NotFoundError } from "@eztik/common";
-import { cancelOrderRouter } from "./routes/cancel-order";
 import { createOrderRouter } from "./routes/create-orders";
 import { indexOrderRouter } from "./routes/index";
 import { orderDetailRouter } from "./routes/orders-detail";
+import { cancelOrderRouter } from "./routes/cancel-order";
 
 const app = express();
 app.set("trust proxy", true);

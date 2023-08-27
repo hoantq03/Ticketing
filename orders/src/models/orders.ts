@@ -1,15 +1,17 @@
+import { OrderStatus } from "@eztik/common";
 import mongoose from "mongoose";
+import { TicketDoc } from "./ticket";
 
 interface OrderAttrs {
   userId: string;
-  status: string;
+  status: OrderStatus;
   expiresAt: Date;
   ticket: TicketDoc;
 }
 
 interface OrderDoc extends mongoose.Document {
   userId: string;
-  status: string;
+  status: OrderStatus;
   expiresAt: Date;
   ticket: TicketDoc;
 }
@@ -27,6 +29,8 @@ const orderSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
+      enum: Object.values(OrderStatus),
+      default: OrderStatus.Created,
     },
     expiresAt: {
       Type: mongoose.Schema.Types.Date,
@@ -39,7 +43,7 @@ const orderSchema = new mongoose.Schema(
   {
     toJSON: {
       transform(doc, ret) {
-        ret._id = ret.id;
+        ret.id = ret._id;
         delete ret._id;
       },
     },

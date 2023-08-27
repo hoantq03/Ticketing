@@ -1,5 +1,5 @@
+import { requireAuth, OrderStatus } from "@eztik/common";
 import express, { Request, Response } from "express";
-import { requireAuth, validateRequest } from "@eztik/common";
 import { body } from "express-validator";
 import mongoose from "mongoose";
 
@@ -10,7 +10,6 @@ router.delete(
   requireAuth,
   [
     body("ticketId")
-      .not()
       .isEmpty()
       .custom((input: string) => mongoose.Types.ObjectId.isValid(input))
       .withMessage("Ticket Id mus be provided"),
