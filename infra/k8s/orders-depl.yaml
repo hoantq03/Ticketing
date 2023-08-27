@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: orders
-          image: us.gcr.io/eztik-396014/orders
+          image: hoantq3008/orders
           env:
             - name: NATS_CLIENT_ID
               valueFrom:
@@ -23,7 +23,7 @@ spec:
             - name: NATS_URL
               value: "http://nats-srv:4222"
             - name: NATS_CLUSTER_ID
-              value: "eztik"
+              value: eztik
             - name: MONGO_URI
               value: "mongodb://orders-mongo-srv:27017/orders"
             - name: JWT_KEY
