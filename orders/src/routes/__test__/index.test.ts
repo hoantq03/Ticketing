@@ -43,8 +43,6 @@ it("fetches orders for an particular user", async () => {
     .send()
     .expect(200);
 
-  console.log(orderOne);
-  console.log(response.body);
   expect(response.body.length).toEqual(2);
   expect(response.body[0].id).toEqual(orderOne.id);
   expect(response.body[1].id).toEqual(orderTwo.id);
