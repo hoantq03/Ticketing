@@ -1,6 +1,7 @@
-import { OrderStatus } from "@eztik/common";
 import mongoose from "mongoose";
+import { OrderStatus } from "@eztik/common";
 import { TicketDoc } from "./ticket";
+export { OrderStatus };
 
 interface OrderAttrs {
   userId: string;
@@ -33,11 +34,11 @@ const orderSchema = new mongoose.Schema(
       default: OrderStatus.Created,
     },
     expiresAt: {
-      Type: mongoose.Schema.Types.Date,
+      type: mongoose.Schema.Types.Date,
     },
     ticket: {
       type: mongoose.Schema.Types.ObjectId,
-      red: "Ticket",
+      ref: "Ticket",
     },
   },
   {

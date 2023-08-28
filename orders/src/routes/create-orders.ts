@@ -9,6 +9,8 @@ import { body } from "express-validator";
 import mongoose from "mongoose";
 import { Ticket } from "../models/ticket";
 import { Order } from "../models/orders";
+import { OrderCreatedPublisher } from "../events/publishers/order-canceled-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const EXPIRATION_WINDOW_SECONDS = 15 * 60;
 const router = express.Router();
@@ -52,13 +54,24 @@ router.post(
     // build the order and save it to the database
 
     const order = Order.build({
-      ticket,
       userId: req.currentUser!.id,
-      expiresAt: expiration,
       status: OrderStatus.Created,
+      expiresAt: expiration,
+      ticket,
     });
     await order.save();
+
     //publish the order event saying that an order was created
+    new OrderCreatedPublisher(natsWrapper.client).publish({
+      id: order.id,
+      status: order.status,
+      userId: order.userId,
+      expiresAt: order.expiresAt.toISOString(),
+      ticket: {
+        id: ticket.id,
+        price: ticket.price,
+      },
+    });
 
     res.status(201).send(order);
   }
