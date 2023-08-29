@@ -24,6 +24,7 @@ router.post(
       title,
       price,
       userId: req.currentUser!.id,
+      version: 0,
     });
     await ticket.save();
 

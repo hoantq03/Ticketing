@@ -23,17 +23,22 @@ router.put(
   validateRequest,
   requireAuth,
   async (req: Request, res: Response) => {
-    const ticket = await Ticket.findById(req.params.id);
+    const { id } = req.params;
+    const ticket = await Ticket.findById(id);
+
+    const { title, price } = req.body;
+
     if (!ticket) {
       throw new NotFoundError();
     }
+
+    let version = ticket.version + 1;
 
     if (ticket.userId !== req.currentUser?.id) {
       throw new NotAuthorizedError();
     }
 
-    ticket.title = req.body.title;
-    ticket.price = req.body.price;
+    ticket.set({ title, price, version });
 
     await ticket.save();
 
@@ -42,8 +47,9 @@ router.put(
       title: ticket.title,
       price: ticket.price,
       userId: req.currentUser?.id,
-      version: ticket.version,
+      version,
     });
+
     res.status(200).send(ticket);
   }
 );

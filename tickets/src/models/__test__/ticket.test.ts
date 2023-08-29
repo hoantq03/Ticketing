@@ -5,6 +5,7 @@ it("implements optimistic concurrency control", async () => {
     price: 20,
     title: "Silence",
     userId: "asdasdasd",
+    version: 0,
   });
 
   await ticket.save();
@@ -15,7 +16,10 @@ it("implements optimistic concurrency control", async () => {
 
   // make changed two tickets
   fetchedOne!.price = 5;
+  fetchedOne!.version++;
+
   fetchedTwo!.price = 15;
+  fetchedTwo!.version++;
 
   // save the first fetched ticket to db
   await fetchedOne!.save();
