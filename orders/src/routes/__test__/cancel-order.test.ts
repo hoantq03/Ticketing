@@ -6,7 +6,12 @@ import { Order } from "../../models/orders";
 import { OrderStatus } from "@eztik/common";
 
 it("return 401 if an ticket not your own", async () => {
-  const ticket = Ticket.build({ title: "concert", price: 20 });
+  const ticket = Ticket.build({
+    title: "concert",
+    price: 20,
+    id: new mongoose.Types.ObjectId().toHexString(),
+    version: 0,
+  });
   await ticket.save();
   const userOne = signin();
 
@@ -24,7 +29,12 @@ it("return 401 if an ticket not your own", async () => {
 });
 
 it("cancel ticket succeed", async () => {
-  const ticket = Ticket.build({ title: "concert", price: 20 });
+  const ticket = Ticket.build({
+    title: "concert",
+    price: 20,
+    id: new mongoose.Types.ObjectId().toHexString(),
+    version: 0,
+  });
   await ticket.save();
   const userOne = signin();
 
@@ -45,7 +55,12 @@ it("cancel ticket succeed", async () => {
 });
 
 it("cancel ticket succeed", async () => {
-  const ticket = Ticket.build({ title: "concert", price: 20 });
+  const ticket = Ticket.build({
+    title: "concert",
+    price: 20,
+    id: new mongoose.Types.ObjectId().toHexString(),
+    version: 0,
+  });
   await ticket.save();
   const userOne = signin();
 
