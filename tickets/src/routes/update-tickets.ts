@@ -42,6 +42,7 @@ router.put(
       title: ticket.title,
       price: ticket.price,
       userId: req.currentUser?.id,
+      version: ticket.version,
     });
     res.status(200).send(ticket);
   }

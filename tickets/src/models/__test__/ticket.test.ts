@@ -21,9 +21,5 @@ it("implements optimistic concurrency control", async () => {
   await fetchedOne!.save();
 
   //save the second fetched ticket and expected an error
-  try {
-    await fetchedTwo!.save();
-  } catch (err) {
-    return;
-  }
+  await expect(fetchedTwo!.save()).rejects.toThrow();
 });

@@ -1,15 +1,12 @@
 import {
-  requireAuth,
-  OrderStatus,
-  NotFoundError,
   NotAuthorizedError,
+  NotFoundError,
+  OrderStatus,
+  requireAuth,
 } from "@eztik/common";
 import express, { Request, Response } from "express";
-import { body } from "express-validator";
-import mongoose from "mongoose";
-import { Ticket } from "../models/ticket";
-import { Order } from "../models/orders";
 import { OrderCanceledPublisher } from "../events/publishers/order-created-publisher";
+import { Order } from "../models/orders";
 import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
@@ -34,6 +31,7 @@ router.delete(
 
     new OrderCanceledPublisher(natsWrapper.client).publish({
       id: order.id,
+      version: order.ticket.version,
       ticket: {
         id: order.ticket.id,
       },
