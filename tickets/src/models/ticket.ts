@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { version } from "mongoose";
 
 interface TicketAttrs {
   title: string;
@@ -12,6 +12,7 @@ interface TicketDoc extends mongoose.Document {
   price: number;
   version: number;
   userId: string;
+  orderId?: string;
 }
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
@@ -32,6 +33,10 @@ const ticketSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    orderId: {
+      type: String,
+      required: false,
+    },
   },
   {
     toJSON: {
@@ -47,7 +52,7 @@ ticketSchema.set("versionKey", "version");
 
 ticketSchema.pre("save", function (done) {
   this.$where = {
-    version: this.get("version") - 1,
+    version: this.get("version") == 0 ? 0 : this.get("version") - 1,
   };
   done();
 });
