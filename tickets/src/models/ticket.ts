@@ -52,7 +52,7 @@ ticketSchema.set("versionKey", "version");
 
 ticketSchema.pre("save", function (done) {
   this.$where = {
-    version: this.get("version") == 0 ? 0 : this.get("version") - 1,
+    version: this.get("version") <= 0 ? 0 : this.get("version") - 1,
   };
   done();
 });

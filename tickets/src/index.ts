@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 import { app } from "./app";
 import { natsWrapper } from "./nats-wrapper";
+import { OrderCanceledListener } from "./events/listener/order-canceled-listener";
+import { OrderCreatedListener } from "./events/listener/order-created-listener";
 
 console.log(
   process.env.NATS_CLUSTER_ID,
@@ -34,6 +36,10 @@ const start = async () => {
       console.log("NATS connection closed!");
       process.exit();
     });
+
+    new OrderCanceledListener(natsWrapper.client).listen();
+    new OrderCreatedListener(natsWrapper.client).listen();
+
     process.on("SIGINT", () => natsWrapper.client.close());
     process.on("SIGTERM", () => natsWrapper.client.close());
     await mongoose.connect(process.env.MONGO_URI);

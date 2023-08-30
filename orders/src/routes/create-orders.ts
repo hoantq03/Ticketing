@@ -29,12 +29,6 @@ router.post(
   async (req: Request, res: Response) => {
     const { ticketId } = req.body;
 
-    // const tic = Ticket.build({
-    //   title: "concert",
-    //   price: 20,
-    // });
-    // await tic.save();
-
     // find the ticket the user is trying to order in the database
     const ticket = await Ticket.findById(ticketId);
 
@@ -52,7 +46,7 @@ router.post(
     const expiration = new Date();
     expiration.setSeconds(expiration.getSeconds() + EXPIRATION_WINDOW_SECONDS);
     // build the order and save it to the database
-
+    ticket.version++;
     const order = Order.build({
       userId: req.currentUser!.id,
       status: OrderStatus.Created,
@@ -60,7 +54,7 @@ router.post(
       ticket,
     });
     await order.save();
-
+    await ticket.save();
     //publish the order event saying that an order was created
     new OrderCreatedPublisher(natsWrapper.client).publish({
       id: order.id,

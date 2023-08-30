@@ -8,6 +8,7 @@ import express, { Request, Response } from "express";
 import { OrderCanceledPublisher } from "../events/publishers/order-created-publisher";
 import { Order } from "../models/orders";
 import { natsWrapper } from "../nats-wrapper";
+import { Ticket } from "../models/ticket";
 
 const router = express.Router();
 
@@ -18,15 +19,18 @@ router.delete(
     const { id } = req.params;
 
     const order = await Order.findById(id).populate("ticket");
-
     if (!order) {
       throw new NotFoundError();
     }
+
+    const ticket = await Ticket.findById(order.ticket.id);
 
     if (order.userId !== req.currentUser!.id) {
       throw new NotAuthorizedError();
     }
     order.status = OrderStatus.Cancelled;
+    order.ticket.version++;
+
     await order.save();
 
     new OrderCanceledPublisher(natsWrapper.client).publish({
