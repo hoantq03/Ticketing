@@ -37,11 +37,12 @@ const start = async () => {
       process.exit();
     });
 
+    process.on("SIGINT", () => natsWrapper.client.close());
+    process.on("SIGTERM", () => natsWrapper.client.close());
+
     new OrderCanceledListener(natsWrapper.client).listen();
     new OrderCreatedListener(natsWrapper.client).listen();
 
-    process.on("SIGINT", () => natsWrapper.client.close());
-    process.on("SIGTERM", () => natsWrapper.client.close());
     await mongoose.connect(process.env.MONGO_URI);
     console.log("Connected to MongoDb");
   } catch (err) {

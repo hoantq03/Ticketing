@@ -1,15 +1,9 @@
 import mongoose from "mongoose";
-
 import { app } from "./app";
 import { natsWrapper } from "./nats-wrapper";
 import { OrderCancelledListener } from "./events/listener/order-cancelled-listener";
 import { OrderCreatedListener } from "./events/listener/order-created-listener";
 
-console.log(
-  process.env.NATS_CLUSTER_ID,
-  process.env.NATS_CLIENT_ID,
-  process.env.NATS_URL
-);
 const start = async () => {
   if (!process.env.JWT_KEY) {
     throw new Error("JWT_KEY must be defined");
@@ -24,8 +18,9 @@ const start = async () => {
     throw new Error("NATS_URL must be defined");
   }
   if (!process.env.NATS_CLUSTER_ID) {
-    throw new Error("MONGO_URI must be defined");
+    throw new Error("NATS_CLUSTER_ID must be defined");
   }
+
   try {
     await natsWrapper.connect(
       process.env.NATS_CLUSTER_ID,
@@ -36,12 +31,11 @@ const start = async () => {
       console.log("NATS connection closed!");
       process.exit();
     });
-
-    new OrderCancelledListener(natsWrapper.client).listen();
-    new OrderCreatedListener(natsWrapper.client).listen();
-
     process.on("SIGINT", () => natsWrapper.client.close());
     process.on("SIGTERM", () => natsWrapper.client.close());
+
+    new OrderCreatedListener(natsWrapper.client).listen();
+    new OrderCancelledListener(natsWrapper.client).listen();
     await mongoose.connect(process.env.MONGO_URI);
     console.log("Connected to MongoDb");
   } catch (err) {

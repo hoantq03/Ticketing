@@ -2,14 +2,12 @@ import {
   Listener,
   NotFoundError,
   OrderCreatedEvent,
-  OrderStatus,
   Subjects,
 } from "@eztik/common";
-import { queueGroupName } from "./queue-group-name";
 import { Message } from "node-nats-streaming";
 import { Ticket } from "../../models/ticket";
 import { TicketUpdatedPublisher } from "../publisher/ticket-updated-publisher";
-import { natsWrapper } from "../../nats-wrapper";
+import { queueGroupName } from "./queue-group-name";
 
 export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
   readonly subject = Subjects.OrderCreated;
