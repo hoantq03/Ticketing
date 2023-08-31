@@ -1,4 +1,5 @@
 import {
+  BadRequestError,
   NotAuthorizedError,
   NotFoundError,
   requireAuth,
@@ -32,11 +33,15 @@ router.put(
       throw new NotFoundError();
     }
 
-    let version = ticket.version + 1;
-
     if (ticket.userId !== req.currentUser?.id) {
       throw new NotAuthorizedError();
     }
+
+    if (ticket.orderId) {
+      throw new BadRequestError("Ticket is reserved, can not updated anything");
+    }
+
+    const version = ticket.version + 1;
 
     ticket.set({ title, price, version });
 
@@ -46,7 +51,7 @@ router.put(
       id: ticket.id,
       title: ticket.title,
       price: ticket.price,
-      userId: req.currentUser?.id,
+      userId: req.currentUser!.id,
       version,
     });
 

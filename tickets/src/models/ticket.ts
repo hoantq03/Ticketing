@@ -1,10 +1,11 @@
-import mongoose, { version } from "mongoose";
+import mongoose from "mongoose";
 
 interface TicketAttrs {
   title: string;
   price: number;
   version: number;
   userId: string;
+  orderId?: string;
 }
 
 interface TicketDoc extends mongoose.Document {
