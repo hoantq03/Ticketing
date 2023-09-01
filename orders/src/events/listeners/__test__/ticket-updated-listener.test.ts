@@ -16,7 +16,6 @@ const setup = async () => {
     title: "concert",
     version: 0,
   });
-  console.log(ticket.id);
   await ticket.save();
   //create a fake data event
   const data: TicketUpdatedEvent["data"] = {
@@ -37,8 +36,7 @@ const setup = async () => {
 
 it("finds, updates, and saves a ticket", async () => {
   const { listener, data, msg, ticket } = await setup();
-  console.log("ticket here : " + ticket.id);
-  console.log(data);
+
   await listener.onMessage(data, msg);
   const updatedTicket = await Ticket.findById(ticket.id);
   expect(updatedTicket!.title).toEqual(data.title);
