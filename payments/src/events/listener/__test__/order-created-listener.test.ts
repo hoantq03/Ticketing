@@ -17,6 +17,7 @@ const setup = async () => {
     ticket: {
       id: "alskdfj",
       price: 10,
+      title: "concert",
     },
   };
 

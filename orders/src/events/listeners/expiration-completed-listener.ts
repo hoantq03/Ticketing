@@ -5,12 +5,11 @@ import {
   OrderStatus,
   Subjects,
 } from "@eztik/common";
-import { queueGroupName } from "./queue-group-name";
 import { Message } from "node-nats-streaming";
 import { Order } from "../../models/orders";
-import { OrderCanceledPublisher } from "../publishers/order-created-publisher";
 import { natsWrapper } from "../../nats-wrapper";
-import { Ticket } from "../../models/ticket";
+import { OrderCancelledPublisher } from "../publishers/order-canceled-publisher";
+import { queueGroupName } from "./queue-group-name";
 
 export class ExpirationCompletedListener extends Listener<ExpirationCompletedEvent> {
   readonly subject = Subjects.ExpirationCompleted;
@@ -26,7 +25,7 @@ export class ExpirationCompletedListener extends Listener<ExpirationCompletedEve
     order.set({ status: OrderStatus.Cancelled });
     await order.save();
 
-    new OrderCanceledPublisher(natsWrapper.client).publish({
+    new OrderCancelledPublisher(natsWrapper.client).publish({
       id: order.id,
       ticket: {
         id: order.ticket.id,

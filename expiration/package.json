@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@eztik/common": "^1.0.21",
+    "@eztik/common": "^1.0.22",
     "@types/bull": "^4.10.0",
     "bull": "^4.11.3",
     "express-async-errors": "^3.1.1",

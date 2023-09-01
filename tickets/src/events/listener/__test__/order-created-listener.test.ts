@@ -1,9 +1,9 @@
-import { Listener, OrderCreatedEvent, OrderStatus } from "@eztik/common";
-import { OrderCreatedListener } from "../order-created-listener";
-import { natsWrapper } from "../../../nats-wrapper";
-import { Ticket } from "../../../models/ticket";
+import { OrderCreatedEvent, OrderStatus } from "@eztik/common";
 import mongoose from "mongoose";
 import { Message } from "node-nats-streaming";
+import { Ticket } from "../../../models/ticket";
+import { natsWrapper } from "../../../nats-wrapper";
+import { OrderCreatedListener } from "../order-created-listener";
 
 const setup = async () => {
   //create instance of the listener
@@ -26,6 +26,7 @@ const setup = async () => {
     ticket: {
       id: ticket.id,
       price: ticket.price,
+      title: ticket.title,
     },
     userId: ticket.userId,
     version: ticket.version,

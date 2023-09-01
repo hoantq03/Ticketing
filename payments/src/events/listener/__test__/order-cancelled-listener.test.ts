@@ -14,6 +14,7 @@ const setup = async () => {
     price: 10,
     userId: "asldkfj",
     version: 0,
+    title: "concert",
   });
   await order.save();
 

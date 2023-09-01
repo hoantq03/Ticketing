@@ -20,6 +20,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: CLIENT_ID
+              value: "AU1xc_jrAvb4RbQUmvN2fH8Mh4DcA1LxdKzZa1DoU8MDS-RKtGtkUcbDHLRTFhD-jZfA2NCAK6CJHLB5"
+            - name: CLIENT_SECRET
+              value: "ELm2IlmPISlSZUuJVUYvPtdlmpLu6WVLyvevW23ma8m7msTZ6lO-fLFN3yjd3lhfR9flmateLlAnu0HW"
             - name: NATS_URL
               value: "http://nats-srv:4222"
             - name: NATS_CLUSTER_ID

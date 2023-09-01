@@ -5,7 +5,7 @@ import {
   requireAuth,
 } from "@eztik/common";
 import express, { Request, Response } from "express";
-import { OrderCanceledPublisher } from "../events/publishers/order-created-publisher";
+import { OrderCancelledPublisher } from "../events/publishers/order-canceled-publisher";
 import { Order } from "../models/orders";
 import { natsWrapper } from "../nats-wrapper";
 import { Ticket } from "../models/ticket";
@@ -33,7 +33,7 @@ router.delete(
 
     await order.save();
 
-    new OrderCanceledPublisher(natsWrapper.client).publish({
+    new OrderCancelledPublisher(natsWrapper.client).publish({
       id: order.id,
       version: order.ticket.version,
       ticket: {

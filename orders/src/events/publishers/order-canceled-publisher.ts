@@ -1,6 +1,5 @@
-import { Publisher, OrderCreatedEvent, Subjects } from "@eztik/common";
-import { Order } from "../../models/orders";
+import { OrderCanceledEvent, Publisher, Subjects } from "@eztik/common";
 
-export class OrderCreatedPublisher extends Publisher<OrderCreatedEvent> {
-  readonly subject = Subjects.OrderCreated;
+export class OrderCancelledPublisher extends Publisher<OrderCanceledEvent> {
+  readonly subject = Subjects.OrderCanceled;
 }
