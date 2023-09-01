@@ -14,14 +14,14 @@ paypal.configure({
 });
 
 //@ts-ignore
-const create_payment_json = (title, price) => {
+const create_payment_json = (title, price, orderId) => {
   return JSON.stringify({
     intent: "sale",
     payer: {
       payment_method: "paypal",
     },
     redirect_urls: {
-      return_url: "http://eztik.com/api/payments/success",
+      return_url: `http://eztik.com/api/payments/success?orderId=${orderId}`,
       cancel_url: "http://eztik.com/api/payemnts/failed",
     },
     transactions: [

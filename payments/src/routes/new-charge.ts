@@ -9,15 +9,46 @@ import express, { Request, Response } from "express";
 import { Order } from "../models/order";
 const paypal = require("paypal-rest-sdk");
 import { create_payment_json } from "../config/paypal";
+import { order } from "paypal-rest-sdk";
+import { Payment } from "../models/payment";
+import { PaymentCreatedPublisher } from "../events/publisher/payment-created-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
-router.get("/api/payments/success", (req: Request, res: Response) => {
-  // publish event charged successfull
-  const paymentId = req.query.paymentId;
-  console.log("payment success with id : ", paymentId);
-  res.send("payment success ");
-});
+router.get(
+  "/api/payments/success",
+  requireAuth,
+  async (req: Request, res: Response) => {
+    // publish event charged successfull
+    const paymentId = req.query.paymentId?.toString();
+    const orderId = req.query.orderId?.toString();
+
+    if (!paymentId || !orderId) {
+      throw new NotAuthorizedError();
+    }
+    const order = await Order.findById(orderId);
+    if (!order) {
+      throw new NotFoundError();
+    }
+
+    const payment = Payment.build({
+      orderId: orderId,
+      paypalId: paymentId,
+    });
+    order.status = OrderStatus.Complete;
+
+    await order.save();
+    await payment.save();
+
+    new PaymentCreatedPublisher(natsWrapper.client).publish({
+      id: paymentId,
+      orderId: orderId,
+    });
+
+    res.status(401).send({ paymentId: paymentId });
+  }
+);
 
 router.get("/api/payments/failed", (req: Request, res: Response) => {
   // publish event charged failed
@@ -43,22 +74,25 @@ router.post(
       throw new BadRequestError("Can not pay for an cancelled order ");
     }
 
-    const paypalJson = create_payment_json(order.title, order.price);
+    const paypalJson = create_payment_json(order.title, order.price, order.id);
     const paypalString = await JSON.parse(paypalJson);
 
-    //@ts-ignore
-    await paypal.payment.create(paypalString, function (error: Error, payment) {
-      if (error) {
-        throw error;
-      } else {
-        console.log(payment.links);
-        for (let i = 0; i < payment.links!.length; i++) {
-          if (payment.links![i].rel === "approval_url") {
-            res.redirect(payment.links![i].href);
+    await paypal.payment.create(
+      paypalString,
+      //@ts-ignore
+      function (error: Error, payment, orderId: string) {
+        if (error) {
+          throw error;
+        } else {
+          console.log(payment.links);
+          for (let i = 0; i < payment.links!.length; i++) {
+            if (payment.links![i].rel === "approval_url") {
+              res.redirect(payment.links![i].href);
+            }
           }
         }
       }
-    });
+    );
   }
 );
 
