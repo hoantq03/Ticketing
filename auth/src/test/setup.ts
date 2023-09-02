@@ -11,7 +11,7 @@ let mongo: any;
 beforeAll(async () => {
   process.env.JWT_KEY = "hoantq3008";
 
-  const mongo = await MongoMemoryServer.create();
+  mongo = await MongoMemoryServer.create();
   const mongoUri = mongo.getUri();
 
   await mongoose.connect(mongoUri, {});
