@@ -22,6 +22,7 @@ it("returns a 401 when purchasing an order that doesnt belong to the user", asyn
     version: 0,
     price: 20,
     status: OrderStatus.Created,
+    title: "Concert",
   });
   await order.save();
 
@@ -43,6 +44,7 @@ it("returns a 400 when purchasing a cancelled order", async () => {
     version: 0,
     price: 20,
     status: OrderStatus.Cancelled,
+    title: "concert",
   });
 
   await order.save();
