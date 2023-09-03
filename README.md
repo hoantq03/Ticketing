@@ -1,6 +1,8 @@
 # Ticketing
 Selling Tikcket system microservices
-
+<br/>
 ////////////////////////////////////////
-to run app : skaffold dev
-to run test, change directory and run : npm run test
+<br/>
+to run app : <b/>skaffold dev<b/>
+<br/>
+<b/>to run test, change directory and run : npm run test<b/>
