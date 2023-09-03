@@ -5,6 +5,9 @@ on: pull_request
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: CI
+    env:
+      JWT_KEY: ${{secrets.JWT_KEY}}
     steps:
       - uses: actions/checkout@v2
       - run: cd auth && npm install && npm run test:ci
