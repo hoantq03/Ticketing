@@ -1,12 +1,5 @@
 const paypal = require("paypal-rest-sdk");
 
-if (!process.env.CLIENT_ID) {
-  throw new Error("CLIENT_ID must be defined");
-}
-if (!process.env.CLIENT_SECRET) {
-  throw new Error("CLIENT_ID must be defined");
-}
-
 paypal.configure({
   mode: "sandbox", //sandbox or live
   client_id: process.env.CLIENT_ID,
